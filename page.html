@@ -10,7 +10,9 @@
             .controller('ctrl', function ($scope) {
                 $scope.wd = '';
                 $scope.indexResult = [];
+                $scope.delay = null;
                 $scope.getIndexResult = function (wd) {
+                    let t = Date.now()
                     window.fetch('http://localhost:3000/index/?wd=' + wd)
                         .then(data => data.text())
                         .then(text => text.slice(4, -1))
@@ -18,7 +20,10 @@
                         .then(freqStrArr => freqStrArr.map(s => ({id: s.split(':')[0], freq: +s.split(':')[1]})))
                         .then(freqs => freqs.sort((a, b) => b.freq - a.freq))
                         .then(freqs => freqs.slice(0, 10))
-                        .then(v => $scope.$evalAsync(() => $scope.indexResult = v));
+                        .then(v => $scope.$evalAsync(() => {
+                            $scope.indexResult = v;
+                            $scope.delay = Date.now() - t;
+                        }));
                 };
                 $scope.page = {
                     id: '',
@@ -44,6 +49,7 @@
             查询关键字：
             <input type="text" ng-model="wd">
             <button ng-click="getIndexResult(wd)">查询</button>
+            <span ng-show="delay">{{delay}} ms</span>
         </label>
     </section>
     <section>

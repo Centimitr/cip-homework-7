@@ -98,7 +98,7 @@ func getPageFile(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	wikiXmlToPages()
+	// wikiXmlToPages()
 	pagesToIndex()
 
 	http.HandleFunc("/index/", getIndexResult)
